@@ -1,0 +1,13 @@
+create external table weather_detail (
+    city String,
+    temperature Double,
+    humidity int,
+    currentTime Timestamp,
+    lon Double,
+    lat Double
+)
+
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+LOCATION '/weatherProject/data';

@@ -1,0 +1,30 @@
+#config hive with hdfs
+hdfs dfs -mkdir -p /user/hive/warehouse 
+hdfs dfs -chmod g+w /user/hive/warehouse
+hdfs dfs -mkdir -p /tmp  
+hdfs dfs -chmod g+w /tmp  
+
+#hadoop
+hdfs namenode -format
+start-all.sh 
+stop-all.sh
+
+#derby start server
+../bin/startNetworkServer -h 0.0.0.0
+
+#hive
+schematool -initSchema -dbType derby
+hive --service metastore
+
+#presto
+cd $PRESTO_HOME
+python3 bin/launcher.py start 
+bin/presto.jar --server 127.0.0.1:8090 --catalog hive --debug
+
+#kafka
+cd Documents/kafka_2.13-3.3.1
+bin/zookeeper-server-start.sh config/zookeeper.properties
+bin/kafka-server-start.sh config/server.properties
+
+
+
